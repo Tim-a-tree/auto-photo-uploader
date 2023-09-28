@@ -33,8 +33,21 @@ def create_shutterpresso_dir():
     shutterpresso_dir = os.path.join(desktop_dir, "shutterpresso")
     date = datetime.now().strftime("%Y/%m/%d")
     date = date[2:10]
-    shutterpresso_dir = os.path.join(shutterpresso_dir, date)
+    # shutterpresso_dir = os.path.join(shutterpresso_dir, date)
+    shutterpresso_dir = os.path.join(shutterpresso_dir)
 
+    # sd카드 디렉토리에서 작가님들마다 고유한 파일번호를 인식할 수 있어야 함.
+        ###
+        # ex)
+        # A작가님
+        # AMX 혹은 BMX
+        # 
+        # B작가님
+        # THE
+        # NAA
+        # 
+        # 등올 시작함. 이걸로 구분해서 
+        # ###
     # if the directory already exists, create a new one with a number at the end
     if os.path.exists(shutterpresso_dir):
         count = 1
@@ -69,10 +82,10 @@ def copy_files_to_shutterpresso_dir(sd_card_dir, shutterpresso_dir):
 def main():
 
     # idle the program until sd card is inserted
-    while auto_detect_sd_card() == None:
-        cpu_percent = psutil.cpu_percent(interval=1)
-        print(f"Cpu usage: {cpu_percent}%")
-        time.sleep(1)
+    # while auto_detect_sd_card() == None:
+    #     cpu_percent = psutil.cpu_percent(interval=1)
+    #     print(f"Cpu usage: {cpu_percent}%")
+    #     time.sleep(1)
 
     sd_card_dir = auto_detect_sd_card()
     shutterpresso_dir = create_shutterpresso_dir()    
