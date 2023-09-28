@@ -16,7 +16,10 @@ from datetime import datetime
 import psutil
 import time
 
-possible_sd_card_dir = ["D:", "E:", "F:", "G:", "H:", "I:", "J:", "K:", "L:", "M:", "N:", "O:", "P:", "Q:", "R:", "S:", "T:", "U:", "V:", "W:", "X:", "Y:", "Z:"]
+#윈도우용
+# possible_sd_card_dir = ["D:", "E:", "F:", "G:", "H:", "I:", "J:", "K:", "L:", "M:", "N:", "O:", "P:", "Q:", "R:", "S:", "T:", "U:", "V:", "W:", "X:", "Y:", "Z:"]
+#맥용
+possible_sd_card_dir = ['/Volumnes/']
 
 
 # detects the sd card and returns the directory
@@ -33,6 +36,7 @@ def create_shutterpresso_dir():
     shutterpresso_dir = os.path.join(desktop_dir, "shutterpresso")
     date = datetime.now().strftime("%Y/%m/%d")
     date = date[2:10]
+    # date merge 하는데 오류가 발생해서 일단은 제외하고 함.
     # shutterpresso_dir = os.path.join(shutterpresso_dir, date)
     shutterpresso_dir = os.path.join(shutterpresso_dir)
 
@@ -55,10 +59,11 @@ def create_shutterpresso_dir():
             count += 1
         os.mkdir(shutterpresso_dir + '-1')
         return shutterpresso_dir + '-1'
-    
+    else:
+        os.mkdir(shutterpresso_dir)
 
     # if the directory does not exist, create one
-    os.mkdir(shutterpresso_dir)
+    
     return shutterpresso_dir
 
 
