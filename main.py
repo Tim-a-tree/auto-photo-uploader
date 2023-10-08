@@ -22,19 +22,16 @@ from sys import platform
 default_directory_mac = ["Macintosh HD"]
 
 
-# def get_current_status():
-#     print("Getting current directory: ")
-#     if platform == "darwin":
-#         current_directory = os.listdir("/Volumes/")
+def get_current_status():
+     print("Getting current directory: ")
+     if platform == "darwin":
+         current_directory = os.listdir("/Volumes/")
 
-#     print("Default detected directory: ", current_directory)  # DEBUG
+     print("Default detected directory: ", current_directory)  # DEBUG
 
 
 # detects the sd card and returns the directory
 def auto_detect_sd_card():
-    print("Start auto detecting sd card")  # DEBUG
-    print("Listing directory: ")
-
     if platform == "darwin":
         arr = os.listdir("/Volumes/")
     elif platform == "win32":
@@ -43,6 +40,8 @@ def auto_detect_sd_card():
 
     result = [x for x in arr if x not in default_directory_mac]
 
+    if not result:
+        return
     print("Default detected directory: ", default_directory_mac)  # DEBUG
     print("Detected directory: ", arr)  # DEBUG
     print("Detected directory: ", result)  # DEBUG
@@ -112,14 +111,21 @@ def copy_files_to_shutterpresso_dir(sd_card_dir, shutterpresso_dir):
 
 
 def main():
-    # get_current_status()
+    get_current_status()
     # idle the program until sd card is inserted
-    # while auto_detect_sd_card() == None:
-    #     cpu_percent = psutil.cpu_percent(interval=1)
-    #     print(f"Cpu usage: {cpu_percent}%")
-    #     time.sleep(1)
+    sd_card_dir = ""
+    print("Start auto detecting sd card")  # DEBUG
+    while True:
+        sd_card_dir = auto_detect_sd_card()
+        if sd_card_dir != None:
+            print("Detected directory is ", sd_card_dir) # DEBUG
+            break
+        
+        cpu_percent = psutil.cpu_percent(interval=1)
+        print(f"Cpu usage: {cpu_percent}%")
+        time.sleep(1)
 
-    sd_card_dir = auto_detect_sd_card()
+    # sd_card_dir = auto_detect_sd_card()
     shutterpresso_dir = create_shutterpresso_dir()
 
     copy_files_to_shutterpresso_dir(sd_card_dir, shutterpresso_dir)
