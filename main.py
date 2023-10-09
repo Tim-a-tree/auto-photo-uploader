@@ -16,37 +16,41 @@ import psutil
 import time
 from sys import platform
 
-# 윈도우용
-# possible_sd_card_dir = ["D:", "E:", "F:", "G:", "H:", "I:", "J:", "K:", "L:", "M:", "N:", "O:", "P:", "Q:", "R:", "S:", "T:", "U:", "V:", "W:", "X:", "Y:", "Z:"]
-# 맥용
+# default directory for mac
 default_directory_mac = ["Macintosh HD"]
 
 
 def get_current_status():
-     print("Getting current directory: ")
-     if platform == "darwin":
-         current_directory = os.listdir("/Volumes/")
+    print("Getting current directory: ")
+    if platform == "darwin":
+        current_directory = os.listdir("/Volumes/")
+    elif platform == "win32":
+        # get all the drives in windows system(ex. C:, D:, E:)
+        drives = []
+        for partition in psutil.disk_partitions():
+            drives.append(partition.device)
+        print("Detected drives: ", drives) # DEBUG
+        return drives
 
-     print("Default detected directory: ", current_directory)  # DEBUG
 
-# TODO : adding function for compatible with Windows
+
+    print("Default detected directory: ", current_directory)  # DEBUG
+
 # detects the sd card and returns the directory
 def auto_detect_sd_card():
     if platform == "darwin":
         arr = os.listdir("/Volumes/")
+        result = [x for x in arr if x not in default_directory_mac]
+        return "/Volumes/" + result[0]
     elif platform == "win32":
-        pass
-    # will be updated
+        for partition in psutil.disk_partitions():
+            if "removable" in partition.opts:
+                print("DEBUG : detected sd card : ", partition.device) # DEBUG
+                return partition.device
+            
+    return
 
-    result = [x for x in arr if x not in default_directory_mac]
-
-    if not result:
-        return
-    print("Default detected directory: ", default_directory_mac)  # DEBUG
-    print("Detected directory: ", arr)  # DEBUG
-    print("Detected directory: ", result)  # DEBUG
-
-    return "/Volumes/" + result[0]
+    
 
 
 # create folder with directory on desktop 'C:\Users\user\Desktop\shutterpresso-{date}' and paste all .arw files
