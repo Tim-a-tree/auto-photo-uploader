@@ -29,7 +29,7 @@ def get_current_status():
 
      print("Default detected directory: ", current_directory)  # DEBUG
 
-
+# TODO : adding function for compatible with Windows
 # detects the sd card and returns the directory
 def auto_detect_sd_card():
     if platform == "darwin":
@@ -50,6 +50,8 @@ def auto_detect_sd_card():
 
 
 # create folder with directory on desktop 'C:\Users\user\Desktop\shutterpresso-{date}' and paste all .arw files
+# TODO : create the folder with the identificatin of each photographer
+
 def create_shutterpresso_dir():
     print("Start creating directory for shutterpresso")  # DEBUG
 
@@ -60,18 +62,6 @@ def create_shutterpresso_dir():
 
     shutterpresso_dir = shutterpresso_dir + "_" + str(date)
 
-    # sd카드 디렉토리에서 작가님들마다 고유한 파일번호를 인식할 수 있어야 함.
-    ###
-    # ex)
-    # A작가님
-    # AMX 혹은 BMX
-    #
-    # B작가님
-    # THE
-    # NAA
-    #
-    # 등올 시작함. 이걸로 구분해서
-    # ###
     # if the directory already exists, create a new one with a number at the end
     if os.path.exists(shutterpresso_dir):
         count = 1
