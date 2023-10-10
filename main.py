@@ -44,7 +44,7 @@ def auto_detect_sd_card():
         return "/Volumes/" + result[0]
     elif platform == "win32":
         for partition in psutil.disk_partitions():
-            if "removable" in partition.opts:
+            if "removable" in partition.opts and partition.fstype != "":
                 print("DEBUG : detected sd card : ", partition.device) # DEBUG
                 return partition.device
             
