@@ -19,7 +19,7 @@ from sys import platform
 # default directory for mac
 default_directory_mac = ["Macintosh HD"]
 
-
+# WARNING: there are cases the program identify usb extension as a usb device
 def get_current_status():
     print("Getting current directory: ")
     if platform == "darwin":
