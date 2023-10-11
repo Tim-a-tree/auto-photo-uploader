@@ -61,7 +61,7 @@ def auto_detect_sd_card(drives):
 
 # create folder with directory on desktop 'C:\Users\user\Desktop\shutterpresso-{date}' and paste all .arw files
 # TODO : create the folder with the identificatin of each photographer
-
+# FIX: case when DCIM folder does not exists, the program still makes the copy folder 
 def create_shutterpresso_dir():
     print("Start creating directory for shutterpresso")  # DEBUG
 
@@ -106,11 +106,8 @@ def copy_files_to_shutterpresso_dir(sd_card_dir, shutterpresso_dir):
             print("DEBUG : copying file : ", file, "to ", shutterpresso_dir)  # DEBUG
             shutil.copy(os.path.join(DCIM_dir, file), shutterpresso_dir)
 
-    # when the task is done, print 'Done'
     print("Done")
 
-# FIX: keeps creating shutterpresso_dir - needs to run only one time when plugged in and idle until new directory is detected
-# NOTE: solve using the length of two different list
 def main():
     drives = get_current_status()
 
