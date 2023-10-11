@@ -98,7 +98,6 @@ def copy_files_to_shutterpresso_dir(sd_card_dir, shutterpresso_dir):
     if not os.path.exists(DCIM_dir):
         print("ERROR : DCIM_dir does not exist")
         return
-
     print("Start copying files to shutterpresso directory")
     files_in_DCIM = os.listdir(DCIM_dir)
 
