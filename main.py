@@ -49,10 +49,18 @@ def auto_detect_sd_card(drives):
             else:
                 drives = arr
         elif platform == "win32":
-            for partition in psutil.disk_partitions():
-                if "removable" in partition.opts and partition.fstype != "":
-                    print("DEBUG : detected sd card : ", partition.device) # DEBUG
-                    return partition.device
+            arr = [partition.device for partition in psutil.disk_partitions()]
+            print("DEBUG : arr : ", arr) # DEBUG
+            if len(arr) > len(drives):
+                result = [x for x in arr if x not in drives]
+                print("detected sd card : ", result[0])
+                return result[0]
+            else:
+                drives = arr
+            # for partition in psutil.disk_partitions():
+            #     if "removable" in partition.opts and partition.fstype != "":
+            #         print("DEBUG : detected sd card : ", partition.device) # DEBUG
+            #         return partition.device
 
     return
 
