@@ -15,7 +15,7 @@ from datetime import datetime
 import psutil
 import time
 from sys import platform
-
+import user
 
 def get_current_status():
     print("Getting current directory: ")
@@ -113,6 +113,7 @@ def copy_files_to_shutterpresso_dir(sd_card_dir, shutterpresso_dir):
 
 def main():
     drives = get_current_status()
+    user_list = user.read_users()
 
     # idle the program until sd card is inserted
     sd_card_dir = ""
