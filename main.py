@@ -15,6 +15,12 @@ from datetime import datetime
 import psutil
 import time
 from sys import platform
+import user
+
+# TODO: dropbox login
+# TODO: upload copied files to cloud
+
+
 
 
 def get_current_status():
@@ -27,17 +33,17 @@ def get_current_status():
         # get all the drives in windows system(ex. C:, D:, E:)
         for partition in psutil.disk_partitions():
             drives.append(partition.device)
-    print("Detected drives: ", drives) # DEBUG
+    print("Detected drives: ", drives)  # DEBUG
     return drives
 
 
 # detects the sd card and returns the directory
 def auto_detect_sd_card(drives):
     while True:
-         #DEBUG
-        cpu_percent = psutil.cpu_percent(interval=6)
+        # DEBUG
+        cpu_percent = psutil.cpu_percent(interval=2)
         print(f"Cpu usage: {cpu_percent}%")
-        time.sleep(6)
+        time.sleep(2)
 
         if platform == "darwin":
             arr = os.listdir("/Volumes/")
@@ -45,6 +51,8 @@ def auto_detect_sd_card(drives):
                 result = [x for x in arr if x not in drives]
                 return "/Volumes/" + result[0]
             else:
+                if len(arr) < len(drives):
+                    print("Updating connected devices: ", arr) # DEBUG
                 drives = arr
         elif platform == "win32":
             arr = [partition.device for partition in psutil.disk_partitions()]
@@ -61,13 +69,10 @@ def auto_detect_sd_card(drives):
 
     return
 
-    
-
 
 # create folder with directory on desktop 'C:\Users\user\Desktop\shutterpresso-{date}' and paste all .arw files
-# TODO : create the folder with the identificatin of each photographer
-
-def create_shutterpresso_dir():
+# FIX: case when DCIM folder does not exists, the program still makes the copy folder
+def create_shutterpresso_dir(id):
     print("Start creating directory for shutterpresso")  # DEBUG
 
     desktop_dir = os.path.join(os.path.expanduser("~"), "Desktop")
@@ -75,7 +80,9 @@ def create_shutterpresso_dir():
     date = datetime.now().strftime("%Y-%m-%d")
     date = date[2:10]
 
-    shutterpresso_dir = shutterpresso_dir + "_" + str(date)
+    shutterpresso_dir = shutterpresso_dir + "_" + str(date) + "_" + str(id)
+
+
 
     # if the directory already exists, create a new one with a number at the end
     if os.path.exists(shutterpresso_dir):
@@ -91,19 +98,34 @@ def create_shutterpresso_dir():
     print("Directory created : ", shutterpresso_dir)
     return shutterpresso_dir
 
+def find_id(user_list, file):
+# detecting filename matches with the dictionary
+    print("Received", user_list, file)
+    for user in user_list.keys():
+        print("Checking ", user) # DEBUG
+        values = user_list.get(user)
+        for value in values:
+            if value.lower() in file.lower():
+                print("Matching: ", value.lower(), user, file.lower()) # DEBUG
+                id = str(user)
+                print("The SD card belongs to ", id)
+                return id
 
-# copy files to the shutterpresso folder
-def copy_files_to_shutterpresso_dir(sd_card_dir, shutterpresso_dir):
+#copy files to the shutterpresso folder
+def copy_files_to_shutterpresso_dir(sd_card_dir, user_list):
     # copy all .arw files in DCIM folder
     DCIM_dir = os.path.join(str(sd_card_dir), "DCIM")
     print("DCIM_dir : ", DCIM_dir)
     if not os.path.exists(DCIM_dir):
         print("ERROR : DCIM_dir does not exist")
         return
+
     
     print("Start copying files to shutterpresso directory")
     files_in_DCIM = os.listdir(DCIM_dir)
 
+    id = find_id(user_list, files_in_DCIM[0])
+    shutterpresso_dir = create_shutterpresso_dir(id)
     for file in files_in_DCIM:
         if file.endswith(".arw") or file.endswith(".ARW"):
             # copy file to desktop
@@ -112,22 +134,24 @@ def copy_files_to_shutterpresso_dir(sd_card_dir, shutterpresso_dir):
 
     # when the task is done, print 'Done'
     print("Done\n\n\n")
-
-
-
-
+    
 def main():
     drives = get_current_status()
+    user_list = user.read_users()
+
+    # DEBUG
+    print("Identifation received:")
+    print(user_list)
+    print("\n\n\n")
 
     # idle the program until sd card is inserted
     sd_card_dir = ""
     print("Start auto detecting sd card......")
     sd_card_dir = auto_detect_sd_card(drives)
 
-
-    shutterpresso_dir = create_shutterpresso_dir()
-
-    copy_files_to_shutterpresso_dir(sd_card_dir, shutterpresso_dir)
+    # shutterpresso_dir = create_shutterpresso_dir()
+    
+    copy_files_to_shutterpresso_dir(sd_card_dir, user_list)
 
     # go back to while loop
     main()
