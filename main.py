@@ -119,6 +119,8 @@ def copy_files_to_shutterpresso_dir(sd_card_dir, user_list):
     if not os.path.exists(DCIM_dir):
         print("ERROR : DCIM_dir does not exist")
         return
+
+    
     print("Start copying files to shutterpresso directory")
     files_in_DCIM = os.listdir(DCIM_dir)
 
@@ -132,8 +134,7 @@ def copy_files_to_shutterpresso_dir(sd_card_dir, user_list):
 
     # when the task is done, print 'Done'
     print("Done\n\n\n")
-
-
+    
 def main():
     drives = get_current_status()
     user_list = user.read_users()
