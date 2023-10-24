@@ -16,10 +16,7 @@ import psutil
 import time
 from sys import platform
 import user
-
-# TODO: dropbox login
-# TODO: upload copied files to cloud
-
+import dropbox_api as dba
 
 
 
@@ -98,6 +95,7 @@ def create_shutterpresso_dir(id):
     print("Directory created : ", shutterpresso_dir)
     return shutterpresso_dir
 
+# WARNING: detects the id only using first file in the list
 def find_id(user_list, file):
 # detecting filename matches with the dictionary
     print("Received", user_list, file)
@@ -132,8 +130,7 @@ def copy_files_to_shutterpresso_dir(sd_card_dir, user_list):
             print("copying file : ", file)
             shutil.copy(os.path.join(DCIM_dir, file), shutterpresso_dir)
 
-    # when the task is done, print 'Done'
-    print("Done\n\n\n")
+    return shutterpresso_dir
     
 def main():
     drives = get_current_status()
@@ -151,8 +148,14 @@ def main():
 
     # shutterpresso_dir = create_shutterpresso_dir()
     
-    copy_files_to_shutterpresso_dir(sd_card_dir, user_list)
+    shutterpresso_dir = copy_files_to_shutterpresso_dir(sd_card_dir, user_list)
 
+    # Dropbox authentication
+    access_token = os.environ['ACCESS_TOKEN']
+    dbx = dba.connect_to_dropbox(access_token)
+
+    # uploading to dropbox
+    upload(dbx, shutterpresso_dir)
     # go back to while loop
     main()
 

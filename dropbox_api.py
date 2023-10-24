@@ -45,31 +45,17 @@ def list_folder(dbx):
         print(str(e)) 
 
 def upload(dbx, local_file_list):
-    dropbox_file_path = "" # TODO: Will be updated
+    dropbox_path = "" # TODO: Will be updated
 
     try:
         for local_file in local_file_list:
             local_file_path = pathlib.Path(local_file)
     
         with local_file_path.open("rb") as f:
-            meta = dbx.files_upload(f.read(), dropbox_file_path, mode = dropbox.files.WriteMode("overwrite"))
+            dbx.files_upload(f.read(), dropbox_path)
 
-            return meta
 
     except Exception as e:
         print("Error on uploading file", local_file)
 
 
-
-def main():
-    dotenv.load_dotenv()
-
-    access_token = os.environ['ACCESS_TOKEN']
-    dbx = connect_to_dropbox(access_token)
-
-    list_files_in_folder(dbx)
-    # list_folder(dbx)
-
-
-if __name__ == "__main__":
-    main()
