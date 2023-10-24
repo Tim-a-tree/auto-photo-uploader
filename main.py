@@ -16,9 +16,8 @@ import psutil
 import time
 from sys import platform
 import user
-import dropbox_api as dba
-
-
+import dropbox_api
+import dropbox
 
 def get_current_status():
     print("Getting current directory: ")
@@ -152,7 +151,16 @@ def main():
 
     # Dropbox authentication
     access_token = os.environ['ACCESS_TOKEN']
-    dbx = dba.connect_to_dropbox(access_token)
+    dbx = dropbox_api.connect_to_dropbox(access_token)
+
+    # create a folder in dropbox
+    try:
+        dbx.files_create_folder_v2(dbx, shutterpresso_dir)
+        print("Folder created on Dropbox with name: ", shutterpresso_dir)
+
+    except dropbox.exceptions.ApiError as e:
+        print("Error creating folder: ", e)
+
 
     # uploading to dropbox
     upload(dbx, shutterpresso_dir)

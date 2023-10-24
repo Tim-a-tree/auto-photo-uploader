@@ -44,15 +44,17 @@ def list_folder(dbx):
     except Exception as e: 
         print(str(e)) 
 
-def upload(dbx, local_file_list):
+def upload(dbx, local_file_dir):
     dropbox_path = "" # TODO: Will be updated
 
     try:
         for local_file in local_file_list:
-            local_file_path = pathlib.Path(local_file)
+            if file.endswith(".arw") or file.endswith(".ARW"):
+                local_file_path = pathlib.Path(local_file)
+
     
-        with local_file_path.open("rb") as f:
-            dbx.files_upload(f.read(), dropbox_path)
+                with local_file_path.open("rb") as f:
+                    dbx.files_upload(f.read(), dropbox_path)
 
 
     except Exception as e:
