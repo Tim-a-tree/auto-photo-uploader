@@ -17,7 +17,6 @@ import time
 from sys import platform
 import user
 import dropbox_api as dba
-import dropbox
 
 
 def get_current_status():
@@ -59,10 +58,6 @@ def auto_detect_sd_card(drives):
                 return result[0]
             else:
                 drives = arr
-            # for partition in psutil.disk_partitions():
-            #     if "removable" in partition.opts and partition.fstype != "":
-            #         print("DEBUG : detected sd card : ", partition.device) # DEBUG
-            #         return partition.device
 
     return
 
@@ -137,11 +132,6 @@ def main():
 
     drives = get_current_status()
     user_list = user.read_users()
-
-    # DEBUG
-    print("Identifation received:")
-    print(user_list)
-    print("\n\n\n")
 
     # idle the program until sd card is inserted
     sd_card_dir = ""

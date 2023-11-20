@@ -1,8 +1,7 @@
 import dropbox
 import contextlib
-import pathlib
-import dotenv
 import os
+import time
 
 
 def connect_to_dropbox(access_token):

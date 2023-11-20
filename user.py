@@ -1,19 +1,20 @@
 def read_users():
-    '''
+    """
     this function reads the user from the user txt file
     the file has to be in this format to recognize
 
-    ex)
+    format:
     {username} {user_num} {user_num} {user_num}
     {username} {user_num}
     {username} {user_num} {user_num} {user_num} ....
-    '''
-    
+
+
+    """
 
     filename = "user.txt"
 
     f = open(filename, "r")
-    
+
     lines = f.readlines()
 
     users = {}
@@ -29,6 +30,5 @@ def read_users():
             serial_num.append(arr[i])
 
         users[arr[0]] = serial_num
-
 
     return users
